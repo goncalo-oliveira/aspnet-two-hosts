@@ -1,6 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // set up configuration
@@ -18,15 +15,6 @@ builder.Logging.ClearProviders()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// json serialization
-builder.Services.ConfigureHttpJsonOptions( options =>
-{
-    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    options.SerializerOptions.PropertyNameCaseInsensitive = true;
-    options.SerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-    options.SerializerOptions.Converters.Add( new JsonStringEnumConverter( JsonNamingPolicy.CamelCase, false ) );
-} );
 
 // middleware and web host
 var hostPort = builder.Configuration.GetValue<int>( "port", 9000 );
@@ -58,8 +46,6 @@ if ( app.Environment.IsDevelopment() )
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseRateLimiter();
 
 app.MapGet( "/", () =>
 {
